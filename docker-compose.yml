@@ -11,6 +11,14 @@ services:
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     ports:
       - "5432:5432"
+  app:
+    build: .
+    depends_on:
+      - pgdb
+    environment:
+      PG_CONN: "dbname=cppcrudbp user=user password=pass host=pgdb"
+    stdin_open: true
+    tty: true
 
   pgadmin:
     image: dpage/pgadmin4
@@ -24,7 +32,7 @@ services:
       - pgdb
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-#      - ./doc/erd:/var/lib/pgadmin/storage/admin_admin.com
+      #- ./doc/erd:/var/lib/pgadmin/storage/admin_admin.com
       - ./pgadminservers.json:/pgadmin4/servers.json
 
 volumes:
