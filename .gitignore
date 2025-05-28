@@ -3,6 +3,10 @@
 # Standard build directory for out-of-source builds
 /build/
 
+# Clang cache folder
+# -------------------
+.cache/
+
 # CMake generated files
 CMakeCache.txt
 CMakeFiles/

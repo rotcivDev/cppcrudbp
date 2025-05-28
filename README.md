@@ -28,45 +28,62 @@ cppcrudbp/
 
 O sistema segue princípios de Clean Architecture/Arquitetura Hexagonal, dividindo o código em camadas distintas:
 
-* **Camada de Domínio (`src/domain`):** O coração da aplicação. Contém as entidades de negócio (`User`), objetos de valor e interfaces de repositório (`IUserRepository`). É totalmente independente de qualquer tecnologia ou framework.
+- **Camada de Domínio (`src/domain`):** O coração da aplicação. Contém as entidades de negócio (`User`), objetos de valor e interfaces de repositório (`IUserRepository`). É totalmente independente de qualquer tecnologia ou framework.
 
-* **Camada de Aplicação (`src/application`):** Orquestra as operações de negócio (casos de uso). Contém os serviços (`UserService`) que utilizam as interfaces de repositório e os DTOs (Data Transfer Objects) para comunicação entre as camadas.
+- **Camada de Aplicação (`src/application`):** Orquestra as operações de negócio (casos de uso). Contém os serviços (`UserService`) que utilizam as interfaces de repositório e os DTOs (Data Transfer Objects) para comunicação entre as camadas.
 
-* **Camada de Infraestrutura (`src/infrastructure`):** Fornece as implementações concretas para as interfaces definidas nas camadas de Domínio e Aplicação. Inclui a implementação do repositório PostgreSQL (`PostgreSQLUserRepository`).
+- **Camada de Infraestrutura (`src/infrastructure`):** Fornece as implementações concretas para as interfaces definidas nas camadas de Domínio e Aplicação. Inclui a implementação do repositório PostgreSQL (`PostgreSQLUserRepository`).
 
-* **Camada de Apresentação (`src/presentation`):** Lida com a interação do usuário e a exibição de informações. Inclui adaptadores para diferentes tipos de interação (CLI, HTTP - simulado) e controladores que traduzem as requisições para o Serviço da Aplicação.
+- **Camada de Apresentação (`src/presentation`):** Lida com a interação do usuário e a exibição de informações. Inclui adaptadores para diferentes tipos de interação (CLI, HTTP - simulado) e controladores que traduzem as requisições para o Serviço da Aplicação.
 
-* **Camada Comum (`src/common`):** Contém funcionalidades compartilhadas entre as diferentes camadas, como conexão com banco de dados.
+- **Camada Comum (`src/common`):** Contém funcionalidades compartilhadas entre as diferentes camadas, como conexão com banco de dados.
 
 **Princípios Chave:**
 
-* **Inversão de Dependência:** As camadas de Domínio e Aplicação dependem de abstrações (interfaces), que são implementadas pela camada de Infraestrutura.
+- **Inversão de Dependência:** As camadas de Domínio e Aplicação dependem de abstrações (interfaces), que são implementadas pela camada de Infraestrutura.
 
-* **Injeção de Dependência:** As dependências são fornecidas aos componentes (geralmente via construtores), tornando o código mais testável e modular.
+- **Injeção de Dependência:** As dependências são fornecidas aos componentes (geralmente via construtores), tornando o código mais testável e modular.
 
-* **Configuração Externa:** O comportamento da aplicação é configurado através de arquivos externos, permitindo a seleção de diferentes adaptadores de persistência e I/O em tempo de execução.
+- **Configuração Externa:** O comportamento da aplicação é configurado através de arquivos externos, permitindo a seleção de diferentes adaptadores de persistência e I/O em tempo de execução.
 
 ## Tecnologias Utilizadas
 
-* **C++17:** Linguagem de programação principal.
+- **C++17:** Linguagem de programação principal.
 
-* **CMake:** Sistema de build para gerenciar a compilação e as dependências.
+- **CMake:** Sistema de build para gerenciar a compilação e as dependências.
 
-* **Docker/Docker Compose:** Para containerização e facilidade de ambiente de desenvolvimento.
+- **Docker/Docker Compose:** Para containerização e facilidade de ambiente de desenvolvimento.
 
-* **PostgreSQL:** Sistema de gerenciamento de banco de dados relacional.
+- **PostgreSQL:** Sistema de gerenciamento de banco de dados relacional.
 
-* **libpqxx:** Biblioteca C++ para interação com bancos de dados PostgreSQL.
+- **libpqxx:** Biblioteca C++ para interação com bancos de dados PostgreSQL.
 
 ## Pré-requisitos
+
+### Configurando Servidor LSP
+
+```
+sudo apt install clangd-15  # Ubuntu
+```
+
+```
+sudo dnf install clang-tools-extra  # Fedora
+```
+
+```
+mkdir build && cd build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+ln -s build/compile_commands.json ..
+```
 
 Para construir e executar este projeto, você tem duas opções:
 
 ### Usando Docker (Recomendado)
 
-* **Docker** e **Docker Compose** instalados no seu sistema.
+- **Docker** e **Docker Compose** instalados no seu sistema.
 
 1. Execute o ambiente completo com:
+
    ```bash
    docker-compose up
    ```
@@ -75,13 +92,13 @@ Para construir e executar este projeto, você tem duas opções:
 
 ### Instalação Local
 
-* Um compilador C++ (GCC, Clang, MSVC) que suporte C++17.
-* **CMake** (versão 3.10 ou superior).
-* **libpqxx**: A biblioteca cliente C++ para PostgreSQL.
-    * No Debian/Ubuntu: `sudo apt-get install libpqxx-dev`
-    * No macOS (Homebrew): `brew install libpqxx`
-    * No Windows: Baixe e instale a biblioteca ou use um gerenciador de pacotes como `vcpkg`.
-* Um servidor **PostgreSQL** em execução.
+- Um compilador C++ (GCC, Clang, MSVC) que suporte C++17.
+- **CMake** (versão 3.10 ou superior).
+- **libpqxx**: A biblioteca cliente C++ para PostgreSQL.
+  - No Debian/Ubuntu: https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md
+  - No macOS (Homebrew): `brew install libpqxx`
+  - No Windows: Baixe e instale a biblioteca ou use um gerenciador de pacotes como `vcpkg`.
+- Um servidor **PostgreSQL** em execução.
 
 ## Configuração do Banco de Dados
 
@@ -95,12 +112,14 @@ Se estiver executando localmente:
 ## Compilação e Execução (Instalação Local)
 
 1. Configure o projeto com CMake:
+
    ```bash
    mkdir build && cd build
    cmake ..
    ```
 
 2. Compile o projeto:
+
    ```bash
    make
    ```
@@ -111,3 +130,4 @@ Se estiver executando localmente:
    ```
 
 Alternativamente, você pode usar o script `run.sh` para uma execução rápida.
+
