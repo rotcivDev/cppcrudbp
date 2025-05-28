@@ -1,0 +1,81 @@
+# CMake Build Artifacts
+# --------------------
+# Standard build directory for out-of-source builds
+/build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_CPack_Packages/
+
+# Visual Studio specific files (if building on Windows)
+*.vcxproj
+*.vcxproj.filters
+*.sln
+*.suo
+*.user
+*.opendb
+*.tlog
+*.vcproj
+*.vcproj.user
+ipch/
+*.aps
+*.bsc
+*.ncb
+*.pdb
+*.ilk
+*.obj
+*.idb
+*.sbr
+*.res
+*.pch
+*.ipch
+
+# Executables and Libraries
+# -------------------------
+# General object files
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+CppCrudSystem # Specific to your project name
+
+# Libraries
+*.lib
+*.a
+*.dll
+*.so
+*.dylib
+
+# IDE and OS Specific Files
+# -------------------------
+# VS Code
+.vscode/
+
+# CLion / IntelliJ IDEA
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Vim / Emacs backup files
+*~
+*.swp
+*.bak
+*.orig
+
+# Logs and temporary files
+*.log
+*.tmp
