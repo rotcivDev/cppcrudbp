@@ -13,6 +13,5 @@ add_executable(cppcrudbp ${MAIN} ${SOURCES})
 
 # Para Debian instale pqxx com cmake
 # https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md
-
 target_link_libraries(cppcrudbp PRIVATE pqxx pq)
 

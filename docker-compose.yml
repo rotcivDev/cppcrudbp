@@ -11,14 +11,14 @@ services:
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     ports:
       - "5432:5432"
-  app:
-    build: .
-    depends_on:
-      - pgdb
-    environment:
-      PG_CONN: "dbname=cppcrudbp user=user password=pass host=pgdb"
-    stdin_open: true
-    tty: true
+  #  app:
+  #    build: .
+  #    depends_on:
+  #      - pgdb
+  #    environment:
+  #      PG_CONN: "dbname=cppcrudbp user=user password=pass host=pgdb"
+  #    stdin_open: true
+  #    tty: true
 
   pgadmin:
     image: dpage/pgadmin4

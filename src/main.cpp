@@ -7,7 +7,7 @@ int main(const int argc, char *argv[]) {
   try {
     // Create dependencies
     auto db_connection = std::make_shared<cppcrudbp::common::DBConnection>(
-        "postgresql://user:pass@pgdb:5432/cppcrudbp");
+        "postgresql://user:pass@127.0.0.1:5432/cppcrudbp");
 
     const auto cli = std::make_shared<cppcrudbp::cli::CLI>();
 
