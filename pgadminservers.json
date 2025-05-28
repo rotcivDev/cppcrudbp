@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "cppcrudbp",
+      "Group": "Servers",
+      "Host": "pgdb",
+      "Port": 5432,
+      "MaintenanceDB": "cppcrudbp",
+      "Username": "user",
+      "Password": "pass",
+      "SSLMode": "prefer"
+    }
+  }
+}
