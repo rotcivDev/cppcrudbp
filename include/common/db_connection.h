@@ -3,8 +3,7 @@
 #include <pqxx/pqxx>
 #include <string>
 
-namespace cppcrudbp {
-namespace common {
+namespace cppcrudbp::common {
 
 class DBConnection {
 public:
@@ -19,5 +18,4 @@ private:
   pqxx::connection *conn_;
 };
 
-} // namespace common
-} // namespace cppcrudbp
+} // namespace cppcrudbp::common
