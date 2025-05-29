@@ -1,16 +1,21 @@
+#include "application/user_dto.h"
 #include "domain/user.h"
 #include "infrastructure/postgre_user_repository.h"
 #include <iostream>
 #include <vector>
 
+#include "common/db_connection.h"
+
 namespace cppcrudbp::infrastructure {
 PostgreUserRepository::PostgreUserRepository(
-    std::shared_ptr<pqxx::connection> conn)
-    : connection_(std::move(conn)) {}
+    const std::shared_ptr<cppcrudbp::common::DBConnection> &conn)
+    : db_connection_(conn) {}
 
-bool PostgreUserRepository::createUser(const domain::User &user) {
+bool PostgreUserRepository::createUser(
+    const application::CreateUserRequest &user) {
   try {
-    pqxx::work txn(*connection_);
+    const auto conn = db_connection_->getConnection();
+    pqxx::work txn(*conn);
     txn.exec_params("INSERT INTO users (name, email) VALUES ($1, $2)",
                     user.name, user.email);
     txn.commit();
@@ -21,9 +26,11 @@ bool PostgreUserRepository::createUser(const domain::User &user) {
   }
 }
 
-std::optional<domain::User> PostgreUserRepository::getUserById(int id) {
+std::optional<application::UserResponse>
+PostgreUserRepository::getUserById(int id) {
   try {
-    pqxx::work txn(*connection_);
+    const auto conn = db_connection_->getConnection();
+    pqxx::work txn(*conn);
     pqxx::result res =
         txn.exec_params("SELECT id, name, email FROM users WHERE id = $1", id);
 
@@ -31,7 +38,7 @@ std::optional<domain::User> PostgreUserRepository::getUserById(int id) {
       return std::nullopt;
 
     const auto &row = res[0];
-    domain::User user;
+    application::UserResponse user;
     user.id = row["id"].as<int>();
     user.name = row["name"].as<std::string>();
     user.email = row["email"].as<std::string>();
@@ -42,14 +49,15 @@ std::optional<domain::User> PostgreUserRepository::getUserById(int id) {
   }
 }
 
-std::vector<domain::User> PostgreUserRepository::getAllUsers() {
-  std::vector<domain::User> users;
+std::vector<application::UserResponse> PostgreUserRepository::getAllUsers() {
+  std::vector<application::UserResponse> users;
   try {
-    pqxx::work txn(*connection_);
+    const auto conn = db_connection_->getConnection();
+    pqxx::work txn(*conn);
     pqxx::result res = txn.exec("SELECT id, name, email FROM users");
 
     for (const auto &row : res) {
-      domain::User user;
+      application::UserResponse user;
       user.id = row["id"].as<int>();
       user.name = row["name"].as<std::string>();
       user.email = row["email"].as<std::string>();
@@ -63,7 +71,8 @@ std::vector<domain::User> PostgreUserRepository::getAllUsers() {
 
 bool PostgreUserRepository::updateUser(const domain::User &user) {
   try {
-    pqxx::work txn(*connection_);
+    const auto conn = db_connection_->getConnection();
+    pqxx::work txn(*conn);
     txn.exec_params("UPDATE users SET name = $1, email = $2 WHERE id = $3",
                     user.name, user.email, user.id);
     txn.commit();
@@ -76,7 +85,8 @@ bool PostgreUserRepository::updateUser(const domain::User &user) {
 
 bool PostgreUserRepository::deleteUser(int id) {
   try {
-    pqxx::work txn(*connection_);
+    const auto conn = db_connection_->getConnection();
+    pqxx::work txn(*conn);
     txn.exec_params("DELETE FROM users WHERE id = $1", id);
     txn.commit();
     return true;

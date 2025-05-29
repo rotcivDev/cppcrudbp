@@ -2,6 +2,7 @@
 
 #include "application/user_dto.h"
 #include "application/user_service.h"
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ public:
    * This demonstrates dependency injection.
    */
   explicit CliAdapter(
-      std::unique_ptr<cppcrudbp::application::UserService> userService);
+      std::shared_ptr<cppcrudbp::application::UserService> userService);
 
   /**
    * @brief Starts the CLI application loop.
@@ -30,7 +31,7 @@ public:
   void run();
 
 private:
-  std::unique_ptr<cppcrudbp::application::UserService> userService_;
+  std::shared_ptr<cppcrudbp::application::UserService> userService_;
 
   /**
    * @brief Displays the available commands to the user.
@@ -56,8 +57,8 @@ private:
   parseCreateUserRequest(const std::string &json);
   cppcrudbp::application::UpdateUserRequest
   parseUpdateUserRequest(const std::string &json, int id);
-  std::string
-  serializeUserResponse(const cppcrudbp::application::UserResponse &response);
+  std::string serializeUserResponse(
+      const std::optional<application::UserResponse> &response);
   std::string serializeUserResponses(
       const std::vector<cppcrudbp::application::UserResponse> &responses);
 };

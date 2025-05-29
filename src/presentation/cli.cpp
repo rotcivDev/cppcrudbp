@@ -2,7 +2,8 @@
 #include "domain/domain_exception.h" // Include custom exceptions
 #include <iostream>
 #include <limits> // For numeric_limits
-#include <regex>  // For basic email validation (example)
+#include <optional>
+#include <regex> // For basic email validation (example)
 #include <sstream>
 
 // --- Simple JSON Simulation (replace with nlohmann/json or similar) ---
@@ -51,7 +52,7 @@ std::optional<int> extractJsonIntValue(const std::string &json,
 namespace cppcrudbp::cli {
 
 CliAdapter::CliAdapter(
-    std::unique_ptr<cppcrudbp::application::UserService> userService)
+    std::shared_ptr<cppcrudbp::application::UserService> userService)
     : userService_(std::move(userService)) {
   if (!userService_) {
     throw std::invalid_argument("UserService cannot be null.");
@@ -167,9 +168,8 @@ void CliAdapter::handleCreateUser(const std::vector<std::string> &args) {
       args[0]; // Assuming JSON is the first (and only) arg for simplicity
   cppcrudbp::application::CreateUserRequest request =
       parseCreateUserRequest(jsonBody);
-  cppcrudbp::application::UserResponse response =
-      userService_->createUser(request);
-  std::cout << "User created: " << serializeUserResponse(response) << std::endl;
+  bool response = userService_->createUser(request);
+  std::cout << "User created! "; // << request << std::endl;
 }
 
 void CliAdapter::handleGetUserById(const std::vector<std::string> &args) {
@@ -177,7 +177,8 @@ void CliAdapter::handleGetUserById(const std::vector<std::string> &args) {
     throw std::invalid_argument("Usage: get <id>");
   }
   int id = std::stoi(args[0]);
-  cppcrudbp::application::UserResponse response = userService_->getUserById(id);
+  std::optional<application::UserResponse> response =
+      userService_->getUserById(id);
   std::cout << "User found: " << serializeUserResponse(response) << std::endl;
 }
 
@@ -200,9 +201,9 @@ void CliAdapter::handleUpdateUser(const std::vector<std::string> &args) {
   std::string jsonBody = args[1]; // Assuming JSON is the second arg
   cppcrudbp::application::UpdateUserRequest request =
       parseUpdateUserRequest(jsonBody, id);
-  cppcrudbp::application::UserResponse response =
-      userService_->updateUser(request);
-  std::cout << "User updated: " << serializeUserResponse(response) << std::endl;
+  bool response = userService_->updateUser(request);
+  std::cout
+      << "User updated! "; // << serializeUserResponse(response) << std::endl;
 }
 
 void CliAdapter::handleDeleteUser(const std::vector<std::string> &args) {
@@ -256,10 +257,10 @@ CliAdapter::parseUpdateUserRequest(const std::string &json, int id) {
 }
 
 std::string CliAdapter::serializeUserResponse(
-    const cppcrudbp::application::UserResponse &response) {
+    const std::optional<application::UserResponse> &response) {
   std::stringstream ss;
-  ss << "{\"id\":" << response.id << ",\"name\":\"" << response.name
-     << "\",\"email\":\"" << response.email << "\"}";
+  ss << "{\"id\":" << response->id << ",\"name\":\"" << response->name
+     << "\",\"email\":\"" << response->email << "\"}";
   return ss.str();
 }
 

@@ -2,8 +2,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace cppcrudbp {
-namespace common {
+namespace cppcrudbp::common {
 
 DBConnection::DBConnection(const std::string &connection_string)
     : connection_string_(connection_string), conn_(nullptr) {
@@ -25,7 +24,6 @@ DBConnection::~DBConnection() {
   }
 }
 
-pqxx::connection *DBConnection::getConnection() { return conn_; }
+pqxx::connection *DBConnection::getConnection() const { return conn_; }
 
-} // namespace common
 } // namespace cppcrudbp

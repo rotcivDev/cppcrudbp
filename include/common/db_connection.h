@@ -7,10 +7,10 @@ namespace cppcrudbp::common {
 
 class DBConnection {
 public:
-  DBConnection(const std::string &connection_string);
+  explicit DBConnection(const std::string &connection_string);
   ~DBConnection();
 
-  pqxx::connection *getConnection();
+  [[nodiscard]] pqxx::connection* getConnection() const;
   void disconnect(); // Explicitly disconnects the database
 
 private:
